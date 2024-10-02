@@ -10,7 +10,7 @@ import {
 
 
 
-export function Home({ navigation }) {
+export function Home() {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>WelcomeHome</Text>
