@@ -1,14 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, TextInput, SafeAreaView, Pressable, Image } from 'react-native';
 
 
-export function Login() {
+export function Login({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image 
-      style={styles.logo}
-      source={require('./../assets/logo.png')}/>
+      <Image
+        style={styles.logo}
+        source={require('./../assets/logo.png')} />
       <Text style={styles.title}>MyApp</Text>
       <TextInput
         style={styles.input}
@@ -17,8 +16,9 @@ export function Login() {
       <TextInput
         style={styles.input}
         placeholder="Enter your password "
+        secureTextEntry={true}
       />
-      <Pressable style={styles.button}>
+      <Pressable onPress={() => navigation.navigate('Home')} style={styles.button}>
         <Text style={styles.textButton}>Log-in</Text>
       </Pressable>
     </SafeAreaView>
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  logo:{
+  logo: {
     height: 100,
     width: 100,
   },
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
-    
+
   },
   textButton: {
     color: 'white',

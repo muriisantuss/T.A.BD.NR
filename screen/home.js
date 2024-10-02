@@ -8,7 +8,9 @@ import {
   Image,
 } from "react-native";
 
-export function Home() {
+
+
+export function Home({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>WelcomeHome</Text>
