@@ -9,6 +9,7 @@ export function MyStack() {
     <Stack.Navigator>
       <Stack.Screen name="Login" component={router.Login} options={{ headerShown: false }} />
       <Stack.Screen name="Home" component={router.Home} />
+      <Stack.Screen name="NewTask" component={router.NewTask} />
     </Stack.Navigator>
   )
 }

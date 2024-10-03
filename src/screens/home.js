@@ -1,16 +1,13 @@
 import {
   StyleSheet,
   Text,
-  TextInput,
   SafeAreaView,
   Pressable,
-  Image,
-  ScrollView,
   View
 } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export function Home() {
+export function Home({navigation}) {
 
   return (
     <SafeAreaView style={styles.container}>
@@ -27,9 +24,9 @@ export function Home() {
           </Pressable>
         </View>
       </View>
-      
+
       <SafeAreaView style={styles.footer}>
-        <Pressable style={[styles.addButton, { backgroundColor: "#546c04", width: 40, height: 40 }]}>
+        <Pressable onPress={() => navigation.navigate('NewTask')} style={[styles.addButton, { backgroundColor: "#546c04", width: 40, height: 40 }]}>
           <Text><Icon name="plus" size={15} color="#fff" /></Text>
         </Pressable>
       </SafeAreaView>
@@ -78,7 +75,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
     shadowColor: "black",
-    shadowOffset: {width: -0.5, height: 1}
+    shadowOffset: { width: -0.5, height: 1 }
   },
   footer: {
     flex: 1,
