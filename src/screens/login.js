@@ -23,8 +23,8 @@ export function Login({ navigation }) {
         console.log(errorCode)
         Alert.alert(error.message);
       });
-
   }
+
   return (
     <SafeAreaView style={styles.container}>
       <Image
@@ -70,6 +70,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     borderRadius: 8,
+    shadowColor: "black",
+    shadowOffset: { width: 1, height: 2 }
   },
   title: {
     fontSize: 50,
@@ -85,6 +87,8 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 }
 
   },
   textButton: {
