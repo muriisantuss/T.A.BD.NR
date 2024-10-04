@@ -1,8 +1,30 @@
-import { StyleSheet, Text, TextInput, SafeAreaView, Pressable, Image } from 'react-native';
+import { useState } from 'react';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from "../services/firebaseConfig"
+
+import { StyleSheet, Text, TextInput, SafeAreaView, Pressable, Image, Alert } from 'react-native';
 
 
 export function Login({ navigation }) {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState()
 
+  const hangleSignIn = () => {
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user)
+        Alert.alert('Login successful')
+        navigation.navigate('Home')
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        console.log(errorCode)
+        Alert.alert(error.message);
+      });
+
+  }
   return (
     <SafeAreaView style={styles.container}>
       <Image
@@ -11,19 +33,24 @@ export function Login({ navigation }) {
       <Text style={styles.title}>MyApp</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter your name"
+        placeholder="Enter your E-mail"
+        onChangeText={(val) => {
+          setEmail(val)
+        }}
       />
       <TextInput
         style={styles.input}
         placeholder="Enter your password "
         secureTextEntry={true}
+        onChangeText={(val) => {
+          setPassword(val)
+        }}
       />
-      <Pressable onPress={() => navigation.navigate('Home')} style={styles.button}>
+      <Pressable onPress={hangleSignIn} style={styles.button}>
         <Text style={styles.textButton}>Log-in</Text>
       </Pressable>
     </SafeAreaView>
   );
-
 }
 
 const styles = StyleSheet.create({

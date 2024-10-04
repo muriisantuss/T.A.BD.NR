@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export function Home({navigation}) {
+export function Home({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
