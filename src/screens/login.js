@@ -8,6 +8,7 @@ import { StyleSheet, Text, TextInput, SafeAreaView, Pressable, Image, Alert } fr
 export function Login({ navigation }) {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState()
+  const [errorMessage, setErrorMessage] = useState('')
 
   const hangleSignIn = () => {
     const auth = getAuth();
@@ -15,13 +16,34 @@ export function Login({ navigation }) {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user)
+        setErrorMessage('');
         Alert.alert('Login successful')
         navigation.navigate('Home')
       })
       .catch((error) => {
         const errorCode = error.code;
-        console.log(errorCode)
-        Alert.alert(error.message);
+        let message = '';
+
+        switch (errorCode) {
+          case 'auth/invalid-email':
+            message = 'Invalid email.';
+            break;
+          case 'auth/user-not-found':
+            message = 'User not found.';
+            break;
+          case 'auth/invalid-credential':
+            message = 'Incorrect password.';
+            break;
+          case 'auth/too-many-requests':
+            message = 'You are temporarily blocked from logging in due to too many attempts. Please refresh the page.';
+            break;
+          default:
+            message = 'Error trying to log in. Please check your credentials.';
+        }
+
+        setErrorMessage(message); // Define a mensagem de erro
+        console.log(errorCode);
+        Alert.alert(message); // Exibe o alerta com a mensagem
       });
   }
 
@@ -46,6 +68,7 @@ export function Login({ navigation }) {
           setPassword(val)
         }}
       />
+      {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
       <Pressable onPress={hangleSignIn} style={styles.button}>
         <Text style={styles.textButton}>Log-in</Text>
       </Pressable>
@@ -94,5 +117,9 @@ const styles = StyleSheet.create({
   textButton: {
     color: 'white',
     fontWeight: 'bold',
-  }
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 10,
+  },
 });
