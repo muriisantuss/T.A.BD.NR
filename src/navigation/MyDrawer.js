@@ -10,6 +10,7 @@ export function MyDrawer() {
       <Drawer.Screen name="Login" component={router.Login} options={{ headerShown: false }} />
       <Drawer.Screen name="Home" component={router.Home} />
       <Drawer.Screen name="NewTask" component={router.NewTask} options={{ headerShown: false }}/>
+      <Drawer.Screen name="Edit" component={router.Edit} options={{ headerShown: false }}/>
     </Drawer.Navigator>
   )
 }

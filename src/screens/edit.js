@@ -1,43 +1,42 @@
-import { StyleSheet, SafeAreaView, View, Text, TextInput, Pressable, Alert} from 'react-native';
-import { getFirestore, addDoc, collection } from 'firebase/firestore';
-import { useState } from 'react';
+import { useState, useEffect } from "react";
+import { StyleSheet, SafeAreaView, Text, TextInput, Pressable, Alert } from 'react-native';
+import { getFirestore, doc, updateDoc } from "firebase/firestore";
 
-export function NewTask({ navigation, route }) {
-  const [nameTask, setNameTask] = useState();
-  const [dateTask, setDateTask] = useState();
-
+export function Edit({ navigation, route }) {
+  const { task, onGoBack } = route.params || {};
   const db = getFirestore();
+  const [name, setUptadeName] = useState(task.name);
+  const [date, setUptadeDate] = useState(task.dateTask);
 
-  const handleAddTask = async () => {
-    if (nameTask.trim() == '' || dateTask.trim() == '') {
-      Alert.alert("Error", "All fields are required!")
-    }
+  const handleSave = async () => {
     try {
-      await addDoc(collection(db, "appTask"), { name: nameTask, dateTask })
-      Alert.alert("Success", "task added successfully")
-      navigation.navigate('Home')
-      route.params?.onGoBack();
+      await updateDoc(doc(db, "appTask", task.id), { name, dateTask: date });
+      if (onGoBack) {
+        onGoBack();
+      }
+      navigation.navigate('Home');
     } catch (error) {
-      Alert.alert("Error", "Failed to add new task " + error.message);
+      Alert.alert("Erro", "Error when updating the task: " + error.message);
     }
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Add New Task!!</Text>
+      <Text style={styles.title}>Update Task!!</Text>
       <TextInput
         style={styles.input}
         placeholder="Task name: "
-        onChangeText={setNameTask}
+        onChangeText={setUptadeName}
+        value={name}
       />
       <TextInput
         style={styles.input}
         placeholder="Deadline for completion: "
-        onChangeText={setDateTask}
+        onChangeText={setUptadeDate}
+        value={date}
       />
-
-      <Pressable onPress={handleAddTask} style={styles.button}>
-        <Text style={styles.textButton}>Add</Text>
+      <Pressable onPress={handleSave} style={styles.button}>
+        <Text style={styles.textButton}>Save</Text>
       </Pressable>
       <Pressable onPress={() => navigation.navigate('Home')}>
         <Text style={styles.cancel}>Cancel</Text>
@@ -80,7 +79,6 @@ const styles = StyleSheet.create({
     padding: 10,
     shadowColor: "black",
     shadowOffset: { width: 2, height: 2 }
-
   },
   textButton: {
     color: 'white',
