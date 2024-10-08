@@ -1,6 +1,8 @@
-import { collection, getFirestore, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, getFirestore, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
+import Checkbox from "expo-checkbox";
+
 import {
   StyleSheet,
   Text,
@@ -41,6 +43,16 @@ export function Home({ navigation }) {
     setModalVisible(true)
   }
 
+  const toggleTaskStatus = async (id, currentStatus) => {
+    try {
+      const taskRef = doc(db, "appTask", id);
+      await updateDoc(taskRef, { completed: !currentStatus });
+      fetchTasks();
+    } catch (error) {
+      Alert.alert("Erro", "Erro ao atualizar status: " + error.message);
+    }
+  };
+
   const clickDeleteTask = async () => {
     if (deleteTask) {
       try {
@@ -56,21 +68,39 @@ export function Home({ navigation }) {
   };
 
   const Item = ({ task }) => {
+    const [checked, setChecked] = useState(task.completed || false);
+
+    const toggleCheckbox = () => {
+      setChecked(!checked);
+      toggleTaskStatus(task.id, checked);
+    };
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.cardContainer}>
           <Text style={styles.title}>{task.name} </Text>
           <Text style={styles.date}>Deadline: {task.dateTask}</Text>
 
-          <View style={styles.buttonContainer}>
-            <Pressable onPress={() => navigation.navigate('Edit', { task, onGoBack: fetchTasks })} style={[styles.button, { backgroundColor: "#4B53B4" }]}>
-              <Text><Icon name="pencil" size={15} color="#fff" /></Text>
-            </Pressable>
-            <Pressable onPress={() => deleteOneTask(task.id)} style={[styles.button, { backgroundColor: "red", marginLeft: 8 }]}>
-              <Text><Icon name="trash" size={15} color="#fff" /></Text>
-            </Pressable>
+          <View style={styles.spaceBetween}>
+            <View style={styles.checkboxContainer}>
+              <Checkbox
+                style={styles.checkbox}
+                value={checked}
+                onValueChange={toggleCheckbox}
+              />
+              <Text style={styles.checkboxLabel}>Done</Text>
+            </View>
+            <View style={styles.buttonContainer}>
+              <Pressable onPress={() => navigation.navigate('Edit', { task, onGoBack: fetchTasks })} style={[styles.button, { backgroundColor: "#4B53B4" }]}>
+                <Text><Icon name="pencil" size={15} color="#fff" /></Text>
+              </Pressable>
+              <Pressable onPress={() => deleteOneTask(task.id)} style={[styles.button, { backgroundColor: "red", marginLeft: 8 }]}>
+                <Text><Icon name="trash" size={15} color="#fff" /></Text>
+              </Pressable>
+            </View>
           </View>
         </View>
+
+
       </SafeAreaView>
     )
   }
@@ -203,5 +233,21 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     textAlign: 'center',
+  },
+  spaceBetween: {
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkbox: {
+    marginRight: 8,
+  },
+  checkboxLabel: {
+    fontSize: 16,
   }
 });
